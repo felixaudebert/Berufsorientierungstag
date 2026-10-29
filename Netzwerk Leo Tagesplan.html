@@ -1,6 +1,11 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="robots" content="noindex">
 <title>Mein Tagesplan</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;600&family=Didact+Gothic&display=swap">
 <style>
@@ -37,14 +42,13 @@ header { display: flex; flex-direction: column; gap: 18px; }
 .rule { height: 3px; background: var(--gold); border: 0; margin: 0; }
 h1 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 40px; line-height: 1.05; text-wrap: balance; }
 .lead { margin: 0; color: var(--ink-soft); }
-.demo { background: var(--wash); border-left: 4px solid var(--gold); padding: 12px 14px; font-size: 15px; margin: 0; }
-.demo b { font-family: var(--display); letter-spacing: 0.06em; }
 form { display: flex; flex-direction: column; gap: 10px; }
 label { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }
+.hint { margin: 0; font-size: 14px; color: var(--ink-soft); }
 .row { display: flex; flex-direction: column; gap: 10px; }
 input {
   width: 100%; min-height: 56px;
-  font-family: var(--display); font-size: 24px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  font-family: var(--display); font-size: 24px; font-weight: 500; letter-spacing: 0.06em;
   padding: 12px 14px; border: 2px solid var(--ink); border-radius: 0; background: var(--paper); color: var(--ink);
 }
 input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
@@ -57,27 +61,54 @@ button:active { opacity: .85; }
 button.ghost { background: transparent; color: var(--blue); min-height: 44px; padding: 8px 14px; font-size: 16px; }
 button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .error { color: var(--danger); margin: 0; font-size: 15px; }
-#result { display: flex; flex-direction: column; gap: 16px; }
-.who { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.who h2 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 26px; }
-.who h2 span { color: var(--blue); letter-spacing: 0.08em; }
+#choose, #result { display: flex; flex-direction: column; gap: 16px; }
+#choose h2 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 26px; }
+.choices { display: flex; flex-direction: column; gap: 10px; }
+.choices button { text-align: left; }
+.choices button span { display: block; font-family: var(--body); font-weight: 400; font-size: 15px; letter-spacing: 0; }
+.who-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.who-head h2 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.15; }
+.who-head h2 span { color: var(--blue); }
+.role { margin: 0; font-size: 15px; color: var(--ink-soft); }
+.daynote { margin: 0; padding: 10px 14px; background: var(--wash); border-left: 4px solid var(--gold); font-size: 15px; }
 ol.plan { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-.slot { display: grid; grid-template-columns: 104px 1fr; gap: 4px 14px; padding: 14px 14px; border: 2px solid var(--blue); }
+.slot { display: grid; grid-template-columns: 104px 1fr; gap: 4px 14px; padding: 14px 14px; border: 2px solid var(--blue); transition: opacity .3s; }
 .slot time { font-family: var(--display); font-weight: 600; font-size: 17px; color: var(--blue); font-variant-numeric: tabular-nums; padding-top: 2px; }
 .slot .what { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .slot .tag { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); }
+.slot .who { font-size: 15px; color: var(--ink-soft); }
 .slot h3 { margin: 0; font-family: var(--display); font-weight: 600; font-size: 21px; line-height: 1.2; }
-.slot .room { justify-self: start; grid-column: 2; margin-top: 6px; background: var(--gold); color: #000000; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 999px; }
-.slot.keynote { background: var(--blue); color: #ffffff; }
-.slot.keynote time, .slot.keynote .tag { color: #ffffff; }
+.room { justify-self: start; background: var(--gold); color: #000000; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
+.slot > .room { grid-column: 2; margin-top: 6px; }
+.slot.keynote, .slot.mine { background: var(--blue); color: #ffffff; }
+.slot.keynote time, .slot.keynote .tag, .slot.mine time, .slot.mine .tag, .slot.mine .who, .slot.keynote .who { color: #ffffff; }
 .slot.quiet { border: 0; border-left: 4px solid var(--gold); padding: 6px 14px; background: transparent; }
 .slot.quiet time { font-size: 15px; color: var(--ink); }
 .slot.quiet .what { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; justify-content: center; }
+.slot.multi { grid-template-columns: 1fr; }
+ul.talks b { min-width: 0; }
+ul.talks { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; }
+ul.talks li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+ul.talks li:first-child { border-top: 0; padding-top: 2px; }
+ul.talks b { font-family: var(--display); font-weight: 600; font-size: 17px; line-height: 1.25; }
+ul.talks .who { grid-column: 1; }
+ul.talks .room { grid-column: 2; grid-row: 1 / span 2; font-size: 14px; padding: 3px 10px; }
+.badge { display: none; grid-column: 1 / -1; justify-self: start; background: var(--gold); color: #000000; font-family: var(--display); font-weight: 600; font-size: 13px; letter-spacing: 0.14em; padding: 3px 10px; border-radius: 999px; margin-bottom: 4px; }
+.slot.now .badge { display: inline-block; }
+.slot.now { border-width: 4px; border-color: var(--gold); padding: 18px 16px; box-shadow: 0 8px 22px rgba(72, 69, 64, .22); }
+.slot.now h3 { font-size: 24px; }
+.slot.now time { font-size: 19px; }
+.slot.quiet.now { border: 0; border-left: 8px solid var(--gold); background: var(--wash); padding: 14px 16px; box-shadow: none; }
+.slot.quiet.now .badge { margin-bottom: 2px; }
+.slot.past { opacity: .45; }
 footer { font-size: 14px; color: var(--ink-soft); }
-@media (max-width: 360px) { .slot { grid-template-columns: 1fr; } .slot .room { grid-column: 1; } h1 { font-size: 34px; } }
+@media (max-width: 360px) { .slot { grid-template-columns: 1fr; } .slot > .room { grid-column: 1; } h1 { font-size: 34px; } }
 @media (min-width: 600px) { .row { flex-direction: row; } input { flex: 1; width: auto; } }
 @media (prefers-reduced-motion: no-preference) { #result:not([hidden]) { animation: rise .25s ease-out; } @keyframes rise { from { transform: translateY(6px); } to { transform: none; } } }
 </style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
 
 <div class="wrap">
   <header>
@@ -90,22 +121,29 @@ footer { font-size: 14px; color: var(--ink-soft); }
     <p class="lead">Gib deinen persönlichen Code ein. Du siehst dann, wann du in welchem Raum bist.</p>
   </header>
 
-  <p class="demo" id="demo">Vorschau mit Beispieldaten. Zum Ausprobieren: <b>DEMO-1234</b> oder <b>DEMO-5678</b></p>
-
   <form id="lookup" autocomplete="off" novalidate>
     <label for="code">Dein Code</label>
     <div class="row">
-      <input id="code" name="code" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="z. B. ABCD-1234" aria-describedby="err">
+      <input id="code" name="code" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="z. B. ABCD-2345" aria-describedby="hint err">
       <button type="submit">Plan anzeigen</button>
     </div>
+    <p class="hint" id="hint">Referierende und Team: einfach den Vornamen eingeben.</p>
     <p class="error" id="err" role="alert" hidden></p>
   </form>
 
+  <section id="choose" hidden>
+    <h2>Wer bist du?</h2>
+    <div class="choices" id="choices"></div>
+    <button type="button" class="ghost" id="choose-back">Zurück</button>
+  </section>
+
   <section id="result" hidden aria-live="polite">
-    <div class="who">
-      <h2>Plan für <span id="shown-code"></span></h2>
-      <button type="button" class="ghost" id="reset">Anderer Code</button>
+    <div class="who-head">
+      <h2 id="title"></h2>
+      <button type="button" class="ghost" id="reset">Abmelden</button>
     </div>
+    <p class="role" id="role" hidden></p>
+    <p class="daynote" id="daynote" hidden></p>
     <ol class="plan" id="plan"></ol>
   </section>
 
@@ -114,50 +152,145 @@ footer { font-size: 14px; color: var(--ink-soft); }
 
 <script>
 // Fixed timetable of the day (from the deck's Zeitplan slide).
+const EVENT_DATE = "2026-10-30";
 const SLOTS = [
-  { kind: "keynote", time: "8:15 – 9:15", tag: "Keynote · Paul Lepschy", title: "Studienfinanzierung", room: "Aula" },
-  { kind: "quiet", time: "9:15 – 9:40", label: "Pause" },
-  { kind: "session", id: "b1s1", time: "9:40 – 10:05", tag: "Block I · Session 1" },
-  { kind: "quiet", time: "10:05 – 10:10", label: "Raumwechsel" },
-  { kind: "session", id: "b1s2", time: "10:10 – 10:35", tag: "Block I · Session 2" },
-  { kind: "quiet", time: "10:35 – 10:40", label: "Raumwechsel" },
-  { kind: "session", id: "b2s1", time: "10:40 – 11:05", tag: "Block II · Session 1" },
-  { kind: "quiet", time: "11:05 – 11:25", label: "Raumwechsel und Pause" },
-  { kind: "session", id: "b2s2", time: "11:25 – 11:50", tag: "Block II · Session 2" },
-  { kind: "quiet", time: "11:50 – 11:55", label: "Raumwechsel" },
-  { kind: "session", id: "b3s1", time: "11:55 – 12:20", tag: "Block III · Session 1" },
-  { kind: "quiet", time: "12:20 – 12:25", label: "Raumwechsel" },
-  { kind: "session", id: "b3s2", time: "12:25 – 12:50", tag: "Block III · Session 2" }
+  { kind: "keynote", s: "8:15", e: "9:15", tag: "Keynote", title: "Studienfinanzierung", speaker: "Paul Lepschy", room: "Aula" },
+  { kind: "quiet", s: "9:15", e: "9:40", label: "Pause" },
+  { kind: "session", id: "b1s1", block: "b1", s: "9:40", e: "10:05", tag: "Block I · Session 1" },
+  { kind: "quiet", s: "10:05", e: "10:10", label: "Raumwechsel" },
+  { kind: "session", id: "b1s2", block: "b1", s: "10:10", e: "10:35", tag: "Block I · Session 2" },
+  { kind: "quiet", s: "10:35", e: "10:40", label: "Raumwechsel" },
+  { kind: "session", id: "b2s1", block: "b2", s: "10:40", e: "11:05", tag: "Block II · Session 1" },
+  { kind: "quiet", s: "11:05", e: "11:25", label: "Raumwechsel und Pause" },
+  { kind: "session", id: "b2s2", block: "b2", s: "11:25", e: "11:50", tag: "Block II · Session 2" },
+  { kind: "quiet", s: "11:50", e: "11:55", label: "Raumwechsel" },
+  { kind: "session", id: "b3s1", block: "b3", s: "11:55", e: "12:20", tag: "Block III · Session 1" },
+  { kind: "quiet", s: "12:20", e: "12:25", label: "Raumwechsel" },
+  { kind: "session", id: "b3s2", block: "b3", s: "12:25", e: "12:50", tag: "Block III · Session 2" }
 ];
-
-// ===== DATA (example data until the real lists arrive) =====
-const DEMO = true;
-const WORKSHOPS = {
-  med: "Medizin", jura: "Jura", bwl: "BWL", inf: "Informatik",
-  dual: "Duales Studium", ausland: "Studium im Ausland", fh: "Fachhochschule",
-  handwerk: "Handwerk", kfm: "Kaufmännische Ausbildung", oeff: "Öffentlicher Dienst"
+const BLOCK_TALKS = {
+  b1: ["mat", "leh", "zah", "soz", "vwl"],
+  b2: ["zol", "med", "bmw", "aut", "jur"],
+  b3: ["sch", "foj", "mus", "ges", "gsl"]
 };
-// Room per session and workshop.
-const ROOMS = {
-  b1s1: { med: "R 101", jura: "R 102", bwl: "R 103", inf: "R 104" },
-  b1s2: { med: "R 101", jura: "R 102", bwl: "R 103", inf: "R 104" },
-  b2s1: { dual: "R 201", ausland: "R 202", fh: "R 203" },
-  b2s2: { dual: "R 201", ausland: "R 202", fh: "R 203" },
-  b3s1: { handwerk: "R 301", kfm: "R 302", oeff: "R 303" },
-  b3s2: { handwerk: "R 301", kfm: "R 302", oeff: "R 303" }
+
+// ===== DATA =====
+// Workshop title, speaker and room (each talk keeps its room for both sessions of its block).
+const WORKSHOPS = {
+ "mat": {
+  "title": "Mathematikstudium an der LMU",
+  "speaker": "Felix Obermaier",
+  "room": "Raum 302"
+ },
+ "zah": {
+  "title": "Zahnmedizinstudium in Frankfurt",
+  "speaker": "Leonhard Bauer",
+  "room": "Raum 303"
+ },
+ "vwl": {
+  "title": "Volkswirtschaftslehre studieren",
+  "speaker": "Anna Drexler",
+  "room": "Raum 304"
+ },
+ "soz": {
+  "title": "Mein Weg in die Soziale Arbeit",
+  "speaker": "Xenia Rempel",
+  "room": "Raum 305"
+ },
+ "leh": {
+  "title": "Gymnasiales Lehramt an der Uni Passau",
+  "speaker": "Tobias Waldherr",
+  "room": "Raum 201"
+ },
+ "jur": {
+  "title": "Technologie und Recht",
+  "speaker": "Paul Lepschy",
+  "room": "Raum 303"
+ },
+ "zol": {
+  "title": "Ausbildung oder duales Studium beim Zoll",
+  "speaker": "Verena Klaiber",
+  "room": "Raum 304"
+ },
+ "med": {
+  "title": "Medizinstudium in Regensburg",
+  "speaker": "Anna Behringer",
+  "room": "Raum 305"
+ },
+ "bmw": {
+  "title": "Wirtschaftsingenieurwesen dual bei BMW",
+  "speaker": "Leopold Hilger",
+  "room": "Raum 302"
+ },
+ "aut": {
+  "title": "Dual Wirtschaftsinformatik in Ingolstadt und Kanada",
+  "speaker": "Maximilian Schrank",
+  "room": "Raum 201"
+ },
+ "ges": {
+  "title": "Vom Büro zum Hörsaal: Gesundheitswissenschaften",
+  "speaker": "Hanna Hechberger",
+  "room": "Raum 303"
+ },
+ "sch": {
+  "title": "Über Umwege zum Schreinerhandwerk",
+  "speaker": "Louis Hensel",
+  "room": "Raum 304"
+ },
+ "foj": {
+  "title": "Freiwilliges Ökologisches Jahr",
+  "speaker": "Simon Ruhland",
+  "room": "Raum 302"
+ },
+ "mus": {
+  "title": "Musik- und Veranstaltungsbranche",
+  "speaker": "Andy Olschar",
+  "room": "Raum 305"
+ },
+ "gsl": {
+  "title": "Grundschullehramt in Würzburg",
+  "speaker": "Linda Riederer",
+  "room": "Raum 201"
+ }
 };
 // Key: SHA-256 of the normalized code (upper case, no spaces or dashes). No names are stored here.
-const PLANS = {
-  "882c6aaa092092e51d0a7389472b443287cd7f09fa1542c8c6a21f2b3cfcf5d3": { b1s1: "med", b1s2: "inf", b2s1: "dual", b2s2: "ausland", b3s1: "handwerk", b3s2: "kfm" },
-  "936384f3eeeeb8708d48a852a3abbf92f8a0b6d48e53da9b9ba7feb65b6cc523": { b1s1: "jura", b1s2: "bwl", b2s1: "fh", b2s2: "dual", b3s1: "oeff", b3s2: "handwerk" }
-};
+const PLANS = {"c5e0e9ad6c16e045807702f87c73d251567733ed3ab5bbc81ef7f81cffb525a1":{"b1s1":"mat","b1s2":"soz","b2s1":"bmw","b2s2":"aut","b3s1":"mus","b3s2":"foj"},"77dfc51767d71ab46a4fccf2226cefa0e64dfc679bc6e5c59d53121ab00ea8e1":{"b1s1":"mat","b1s2":"vwl","b2s1":"bmw","b2s2":"aut","b3s1":"foj","b3s2":"ges"},"564d39238982d12a04af8e3d2f6cf32b98b18c8461e1a72e2b923dcbbf39c8db":{"b1s1":"leh","b1s2":"soz","b2s1":"zol","b2s2":"bmw","b3s1":"sch","b3s2":"mus"},"780793a71a4a4075b91d4c6723787203cc3df5b58ce3360e23789a97f9fcdfd8":{"b1s1":"zah","b1s2":"mat","b2s1":"med","b2s2":"aut","b3s1":"mus","b3s2":"ges"},"d08713acfb61325b001dc8eb5c948654f1362de05bf4816b360509ae45dfd566":{"b1s1":"vwl","b1s2":"zah","b2s1":"bmw","b2s2":"med","b3s1":"ges","b3s2":"gsl"},"948019dffdc76f0666721a1d783b41c7eea7bc09b3eaa0b61b7cab9f57d4f9c1":{"b1s1":"soz","b1s2":"mat","b2s1":"aut","b2s2":"jur","b3s1":"sch","b3s2":"mus"},"be5e394bb6e8efa90fbbcc499e1475277820d0752642bade55341164cdec8749":{"b1s1":"soz","b1s2":"zah","b2s1":"jur","b2s2":"med","b3s1":"foj","b3s2":"ges"},"e81d3c706fd12389f1244acac6fe3b73ef6f839d5ca7c47e7859bc3e7d2a7277":{"b1s1":"vwl","b1s2":"soz","b2s1":"zol","b2s2":"aut","b3s1":"foj","b3s2":"mus"},"2fbc7a080df4446937173db2346b3b23ba4aafebbedd4b8f15b3e14f08376894":{"b1s1":"mat","b1s2":"leh","b2s1":"med","b2s2":"zol","b3s1":"sch","b3s2":"foj"},"85f6e4265d4a2ef8616f684e89fa73ac6714dc20ffd7da76b07184db2db735d2":{"b1s1":"soz","b1s2":"vwl","b2s1":"aut","b2s2":"zol","b3s1":"gsl","b3s2":"ges"},"88229247e6fb661e7b7a36aa768ae8848b975e49bc4b5743e01da29b2dde8ee6":{"b1s1":"mat","b1s2":"zah","b2s1":"bmw","b2s2":"zol","b3s1":"ges","b3s2":"sch"},"7764df470a5545d7c2627702e9e49c8629e3152659cfb5b40c7b901816ce21a6":{"b1s1":"mat","b1s2":"vwl","b2s1":"bmw","b2s2":"aut","b3s1":"foj","b3s2":"mus"},"3687600ac567dfed3c90d5cedaa6c117f4026163cbccaf3015a9e5162b7b9233":{"b1s1":"mat","b1s2":"vwl","b2s1":"jur","b2s2":"bmw","b3s1":"foj","b3s2":"ges"},"8c7ac6f69b5fb00e08cd35648f0c457df02a8e51eeeba72332956882e05aabbc":{"b1s1":"soz","b1s2":"mat","b2s1":"jur","b2s2":"bmw","b3s1":"gsl","b3s2":"sch"},"7b02a99104d7e714dce790789e91b18920713c26d4e89c37137fb74c6eecc25e":{"b1s1":"soz","b1s2":"zah","b2s1":"aut","b2s2":"zol","b3s1":"mus","b3s2":"foj"},"bae44e75062469514abcec8c94dc4d605c60794e0261fb616092b107225e0cc4":{"b1s1":"soz","b1s2":"mat","b2s1":"jur","b2s2":"aut","b3s1":"mus","b3s2":"foj"},"dd9543881bd1912bc655f31621d941a24559496955df7da7d73e4ad6c3d36a28":{"b1s1":"zah","b1s2":"vwl","b2s1":"bmw","b2s2":"jur","b3s1":"foj","b3s2":"ges"},"4eb67b052377529c86667fdaddbde47dcd03ae4ca00675375592b8b0e61d0e2d":{"b1s1":"vwl","b1s2":"zah","b2s1":"aut","b2s2":"bmw","b3s1":"sch","b3s2":"foj"},"a644fb9ec3e26b5f5bd987beec21b109af2eacd18b44677131f8acce5fd0fc86":{"b1s1":"soz","b1s2":"leh","b2s1":"med","b2s2":"zol","b3s1":"mus","b3s2":"sch"},"b90993561b3dd460460fbb2dfd3302be19ec57c58cc8cc92a6d3c0b0762a7572":{"b1s1":"vwl","b1s2":"soz","b2s1":"zol","b2s2":"med","b3s1":"ges","b3s2":"mus"},"d3a5262e9691e911430b7fedaa9aa789cd46bc92651f19a474ab458408401cfe":{"b1s1":"mat","b1s2":"vwl","b2s1":"jur","b2s2":"zol","b3s1":"foj","b3s2":"ges"},"578800847c7ad6df4f5372541f949b7bfae9d7b049b3fe9c92a96e37860fb4c5":{"b1s1":"mat","b1s2":"soz","b2s1":"med","b2s2":"bmw","b3s1":"sch","b3s2":"mus"},"2f4f99f213ab111bdf73de78d02ad28b711bfce50bf7070a4a2a1cc82fa19ee9":{"b1s1":"mat","b1s2":"zah","b2s1":"zol","b2s2":"med","b3s1":"sch","b3s2":"ges"},"ff114d6f69a6f7605e91c3e3fcc2dea8ea5e372ed3acb5a6ad88abfc32ebb80a":{"b1s1":"zah","b1s2":"mat","b2s1":"jur","b2s2":"bmw","b3s1":"sch","b3s2":"gsl"},"0c8cc5573f7f9dfeb28ab49301c116b0291413d06a25c42d778b24dbeb3d0b65":{"b1s1":"zah","b1s2":"leh","b2s1":"bmw","b2s2":"jur","b3s1":"ges","b3s2":"sch"},"d8919197ca4445ee53b6389b610902c731b7ddae1588a12c24f1772f01e4284c":{"b1s1":"vwl","b1s2":"mat","b2s1":"aut","b2s2":"bmw","b3s1":"foj","b3s2":"mus"},"0c3f5dfcc2aa762faf2fb75c1cb17a14bd38c2559d4dd188f4a4efdf36b74bbb":{"b1s1":"soz","b1s2":"vwl","b2s1":"zol","b2s2":"jur","b3s1":"ges","b3s2":"foj"},"c2bbd96d2d8de1c537b6182b3b37cedbda8817ef662fc458fb29312422705e91":{"b1s1":"vwl","b1s2":"mat","b2s1":"bmw","b2s2":"zol","b3s1":"foj","b3s2":"ges"},"1c9b157c37a6bf8f66f37a2488170a25e56e1fbe4cc3aef6ac10f79963c36b43":{"b1s1":"zah","b1s2":"soz","b2s1":"med","b2s2":"zol","b3s1":"foj","b3s2":"mus"},"d208e69f225f0e8c3e433ff6390f5f94a56cf47617602d2844d4b6882d84c41f":{"b1s1":"zah","b1s2":"vwl","b2s1":"jur","b2s2":"med","b3s1":"mus","b3s2":"ges"},"113ef075ce93db619e7a353ff53dce7e0006de0f26a300e5c53714ac26754c35":{"b1s1":"soz","b1s2":"leh","b2s1":"med","b2s2":"aut","b3s1":"mus","b3s2":"gsl"},"14e13fd3bd7ae28ac604f86a33dafbf32eae56a3ec55ab3b9cee741e2a8513f0":{"b1s1":"soz","b1s2":"leh","b2s1":"med","b2s2":"zol","b3s1":"foj","b3s2":"mus"},"7bf21f5233e356bfd850df6197f6073907b718a69582dff454a18d240a7253f2":{"b1s1":"leh","b1s2":"vwl","b2s1":"zol","b2s2":"bmw","b3s1":"mus","b3s2":"foj"},"da1dfacbd58ee61b03cdf43a1778cdffbd196b4f22194a32147e222776421f8e":{"b1s1":"zah","b1s2":"soz","b2s1":"zol","b2s2":"med","b3s1":"mus","b3s2":"ges"},"b837a8d8ca6618a5a3042a0623cb33025c45fa653c7f74d4aad4a46aaeeea80d":{"b1s1":"zah","b1s2":"mat","b2s1":"jur","b2s2":"med","b3s1":"ges","b3s2":"foj"},"4d08bbfd363bf3b92bbcfa36aae40f927276e03a71ed413358223e4ce8d23a4d":{"b1s1":"vwl","b1s2":"soz","b2s1":"aut","b2s2":"bmw","b3s1":"ges","b3s2":"gsl"},"88069ce435b9b2801926356ebdecf578d5e55a46fc51213cdfa5120019430d0b":{"b1s1":"vwl","b1s2":"zah","b2s1":"bmw","b2s2":"aut","b3s1":"ges","b3s2":"gsl"},"ab23fd6f5ba02c39546024ac8dfc95307e0b3e267c22e95f843ee13fff0be0b2":{"b1s1":"leh","b1s2":"mat","b2s1":"med","b2s2":"bmw","b3s1":"mus","b3s2":"sch"},"ee3ef2ef8a22e91ed2c6d61203b63aac880a7ba3fd614bfd5494f0eb20549399":{"b1s1":"leh","b1s2":"soz","b2s1":"zol","b2s2":"med","b3s1":"foj","b3s2":"mus"},"efb017094cf69fc6067c8d02294c1ebad5ff2b21b70b04b05d5c82129d5ecac9":{"b1s1":"soz","b1s2":"zah","b2s1":"zol","b2s2":"aut","b3s1":"foj","b3s2":"mus"},"90b7a61f01af18d6feacbaebd71e4f39a0b8ec899b41dc5dffde161bbb4bedd0":{"b1s1":"leh","b1s2":"mat","b2s1":"aut","b2s2":"med","b3s1":"mus","b3s2":"sch"},"0ffbc298f366d01c42e30a57211e0db98d917ca80e4eaabe2c8f46406afa7be4":{"b1s1":"vwl","b1s2":"mat","b2s1":"jur","b2s2":"bmw","b3s1":"mus","b3s2":"gsl"},"df8ed669d1770aed9bc31def8ef16cbd3831a464664c1fa99d1623b7861dea18":{"b1s1":"mat","b1s2":"vwl","b2s1":"bmw","b2s2":"jur","b3s1":"foj","b3s2":"mus"},"978b6e566155111b06a9c977426874f0a330e28ee6df254d32b5cd7d3e52be9e":{"b1s1":"mat","b1s2":"vwl","b2s1":"bmw","b2s2":"jur","b3s1":"ges","b3s2":"foj"},"a5e2dbf98847fc1abd499f1cd6198b8d40d26d14e673fc6c5eaa01a7e27abeba":{"b1s1":"mat","b1s2":"vwl","b2s1":"jur","b2s2":"bmw","b3s1":"mus","b3s2":"gsl"},"ec38048afe5ba89799c9106c771f464ce2a73f731613d0e8b446ee8f567ca0ee":{"b1s1":"mat","b1s2":"leh","b2s1":"med","b2s2":"zol","b3s1":"gsl","b3s2":"foj"},"ac9443837d059f698b1d1f4ffc4b609b5aa3db2ed737aeae227c27d87f6e0976":{"b1s1":"vwl","b1s2":"soz","b2s1":"aut","b2s2":"zol","b3s1":"mus","b3s2":"foj"},"6147e203fbb89d9a7764be6baa8b690f944ab12a7b5a50489b3753b4eaa9fa3c":{"b1s1":"vwl","b1s2":"soz","b2s1":"jur","b2s2":"aut","b3s1":"gsl","b3s2":"sch"},"f66777169ee72d1e5fcd5a714dcc1f7906153ba2af92668856e7fa78b5c0ad53":{"b1s1":"leh","b1s2":"zah","b2s1":"bmw","b2s2":"med","b3s1":"ges","b3s2":"sch"},"22e26162a06009fb04799e385ef6f01dd420d2bd8a4b7b1e1ca0bd61f730e09e":{"b1s1":"vwl","b1s2":"soz","b2s1":"aut","b2s2":"jur","b3s1":"sch","b3s2":"gsl"},"ecb0e5eb07bd7ad6332ddeacb664ac23c8155cb0defc3d176dae89fc7836471d":{"b1s1":"zah","b1s2":"soz","b2s1":"med","b2s2":"zol","b3s1":"gsl","b3s2":"sch"},"a91c6fd303d1aacf74673b19b1f48197a8242c1e1a21375c15476e4091138bf7":{"b1s1":"leh","b1s2":"mat","b2s1":"med","b2s2":"aut","b3s1":"gsl","b3s2":"ges"},"6933a518738f48dbc0d76ddd5859a98be7609db327b527c229a22e06f5c7e802":{"b1s1":"leh","b1s2":"mat","b2s1":"aut","b2s2":"jur","b3s1":"gsl","b3s2":"ges"},"f3d87231ef365120e88ce976ca2076b6a3f9291fb9b2dbcf18aedb1de2b5cf0b":{"b1s1":"vwl","b1s2":"soz","b2s1":"zol","b2s2":"med","b3s1":"mus","b3s2":"ges"},"278e03e3fab1df93ba78558664929099fbd972574c7f5d4aaa39676a2d8ea81d":{"b1s1":"zah","b1s2":"vwl","b2s1":"med","b2s2":"zol","b3s1":"ges","b3s2":"mus"},"e576345eab4c6233c46aebb831380ef848c062753a9ffda30962083c49ccb8fc":{"b1s1":"soz","b1s2":"leh","b2s1":"bmw","b2s2":"zol","b3s1":"gsl","b3s2":"sch"},"c08f0e065fab79dd3f59d9af0fe1380c08b9d992ba8284aece46d0ebefc119f6":{"b1s1":"zah","b1s2":"leh","b2s1":"zol","b2s2":"med","b3s1":"ges","b3s2":"foj"},"82963ff7a46ee90df513100b278ada3acbcc4f75bf7ce52687ba2066460cecb2":{"b1s1":"leh","b1s2":"soz","b2s1":"zol","b2s2":"med","b3s1":"sch","b3s2":"ges"},"126134073d863fbf6a6186be0f8dd8508b90c26659c017d791f65a89033a8139":{"b1s1":"vwl","b1s2":"zah","b2s1":"bmw","b2s2":"med","b3s1":"sch","b3s2":"foj"},"d737bf14d5b926f106489889ca932ca9828bfe56bdf7d7684db5faf94de45eea":{"b1s1":"soz","b1s2":"zah","b2s1":"aut","b2s2":"jur","b3s1":"ges","b3s2":"sch"},"ce7c2fc145265b41a0c0b3514e21c969469f74f7b02c75e0ab1b9b6edc9ae301":{"b1s1":"soz","b1s2":"vwl","b2s1":"zol","b2s2":"jur","b3s1":"ges","b3s2":"foj"},"fd2e2cc562041b387f8a7a9d15d58142a4d2c5f0fafd3837dddf55edbec78cc2":{"b1s1":"mat","b1s2":"leh","b2s1":"med","b2s2":"jur","b3s1":"sch","b3s2":"gsl"},"7632aa06f321e8db1f7d810c99914c0b28db034c6b349f60abd74bfa2d89fd16":{"b1s1":"vwl","b1s2":"mat","b2s1":"jur","b2s2":"bmw","b3s1":"gsl","b3s2":"mus"},"a2436b90b8232ccff6d0d8593de27c888a6f49d77ef34f726ed4a05af5ab5802":{"b1s1":"leh","b1s2":"vwl","b2s1":"med","b2s2":"bmw","b3s1":"gsl","b3s2":"foj"},"dfd2a4f8d5254265175c30a9a1e830b745292c07b3381b0132ec6800d1e9a678":{"b1s1":"zah","b1s2":"leh","b2s1":"zol","b2s2":"jur","b3s1":"sch","b3s2":"gsl"},"bef27d9b9cd277f628cc5a7ead838bcb1d997367857c70724d35a8ffc4e919cf":{"b1s1":"leh","b1s2":"zah","b2s1":"aut","b2s2":"jur","b3s1":"gsl","b3s2":"sch"},"88ccd492d8d07e104c95eff79cdf530859530c5da03e608288fd9ade0115dc43":{"b1s1":"leh","b1s2":"zah","b2s1":"aut","b2s2":"jur","b3s1":"gsl","b3s2":"sch"},"9dd5a4aa4b267101c961200c977bea2b5763cb92c83474be0ff9ff4505da79f9":{"b1s1":"leh","b1s2":"zah","b2s1":"jur","b2s2":"aut","b3s1":"gsl","b3s2":"sch"},"3c2bbb72ca6c7daf3e81beaeb4ca1e2a9e07e8948c12b945e775d6b0ea871544":{"b1s1":"zah","b1s2":"leh","b2s1":"aut","b2s2":"jur","b3s1":"sch","b3s2":"gsl"},"c8a6c20a2404f427e02f6afd473dc0e441b85dc5ad11dbfd140247163874f11e":{"b1s1":"leh","b1s2":"zah","b2s1":"jur","b2s2":"aut","b3s1":"gsl","b3s2":"sch"},"708d5f32e4608a91bb97188b74fe0ab8758da814765720b7d5f15899e3436b37":{"b1s1":"zah","b1s2":"leh","b2s1":"aut","b2s2":"zol","b3s1":"sch","b3s2":"gsl"},"1fa5bfa261f0abb23dfb0d604a3a52c223f45cc971f85b7e0a827e32a875f6d8":{"b1s1":"leh","b1s2":"mat","b2s1":"med","b2s2":"aut","b3s1":"gsl","b3s2":"mus"}};
 // ===== END DATA =====
 
-const $ = (id) => document.getElementById(id);
-$("demo").hidden = !DEMO;
+// Name logins: speakers see their own talk and everything running while they are free; the team sees everything.
+const speaker = (talk, name, keynote) => ({ kind: "speaker", talk, name, keynote: !!keynote });
+const team = (name) => ({ kind: "team", name });
+const NAMES = {
+  felix: [speaker("mat", "Felix Obermaier"), team("Felix Audebert")],
+  leonhard: [speaker("zah", "Leonhard Bauer")],
+  anna: [speaker("vwl", "Anna Drexler"), speaker("med", "Anna Behringer")],
+  xenia: [speaker("soz", "Xenia Rempel")],
+  tobias: [speaker("leh", "Tobias Waldherr")],
+  paul: [speaker("jur", "Paul Lepschy", true)],
+  verena: [speaker("zol", "Verena Klaiber")],
+  leopold: [speaker("bmw", "Leopold Hilger")],
+  maximilian: [speaker("aut", "Maximilian Schrank")],
+  hannah: [speaker("ges", "Hanna Hechberger")],
+  louis: [speaker("sch", "Louis Hensel")],
+  simon: [speaker("foj", "Simon Ruhland")],
+  andy: [speaker("mus", "Andy Olschar")],
+  linda: [speaker("gsl", "Linda Riederer")],
+  konrad: [team("Konrad")],
+  anja: [team("Anja")],
+  annelie: [team("Annelie")],
+  katrin: [team("Katrin")],
+  benni: [team("Benni Haas")]
+};
+NAMES.hanna = NAMES.hannah;
+NAMES.benedikt = NAMES.benni;
 
+const $ = (id) => document.getElementById(id);
+const STORE = "bot26-login";
 const normalize = (s) => s.toUpperCase().replace(/[\s\-–]/g, "");
 const pretty = (n) => n.length === 8 ? n.slice(0, 4) + "-" + n.slice(4) : n;
+const minutes = (hm) => { const [h, m] = hm.split(":").map(Number); return h * 60 + m; };
+const blockOf = (talk) => Object.keys(BLOCK_TALKS).find((b) => BLOCK_TALKS[b].includes(talk));
+const blockName = { b1: "Block I", b2: "Block II", b3: "Block III" };
 
 async function sha256(text) {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
@@ -171,67 +304,181 @@ function el(tag, cls, text) {
   return e;
 }
 
-function render(code, plan) {
-  const list = $("plan");
-  list.replaceChildren();
-  for (const s of SLOTS) {
-    const li = el("li", "slot " + s.kind);
-    li.appendChild(el("time", null, s.time));
-    const what = el("div", "what");
-    if (s.kind === "quiet") {
-      what.textContent = s.label;
-      li.appendChild(what);
-    } else {
-      const ws = s.kind === "session" ? plan[s.id] : null;
-      const title = s.kind === "keynote" ? s.title : (WORKSHOPS[ws] || "Noch nicht zugeteilt");
-      const room = s.kind === "keynote" ? s.room : (ROOMS[s.id] && ROOMS[s.id][ws]) || "Raum folgt";
-      what.appendChild(el("span", "tag", s.tag));
-      what.appendChild(el("h3", null, title));
-      li.appendChild(what);
-      li.appendChild(el("span", "room", room));
-    }
-    list.appendChild(li);
-  }
-  $("shown-code").textContent = pretty(code);
-  $("lookup").hidden = true;
-  $("result").hidden = false;
+function show(section) {
+  for (const id of ["lookup", "choose", "result"]) $(id).hidden = id !== section;
 }
 
-async function lookup(raw, remember) {
-  const code = normalize(raw);
+function remember(value) { try { localStorage.setItem(STORE, value); } catch {} }
+function forget() { try { localStorage.removeItem(STORE); } catch {} }
+
+// --- Building the plan ---
+// who: { kind: "student", plan } | speaker(...) | team(...)
+function slotItem(s, who) {
+  const li = el("li", "slot " + s.kind);
+  li.dataset.s = minutes(s.s);
+  li.dataset.e = minutes(s.e);
+  li.appendChild(el("span", "badge", "Läuft gerade"));
+  li.appendChild(el("time", null, s.s + " – " + s.e));
+  const what = el("div", "what");
+  li.appendChild(what);
+
+  if (s.kind === "quiet") { what.textContent = s.label; return li; }
+
+  if (s.kind === "keynote") {
+    const own = who.kind === "speaker" && who.keynote;
+    what.appendChild(el("span", "tag", own ? "Dein Vortrag · Keynote" : s.tag + " · " + s.speaker));
+    what.appendChild(el("h3", null, s.title));
+    li.appendChild(el("span", "room", s.room));
+    return li;
+  }
+
+  // A session slot.
+  if (who.kind === "student") {
+    const w = WORKSHOPS[who.plan[s.id]];
+    what.appendChild(el("span", "tag", s.tag));
+    what.appendChild(el("h3", null, w ? w.title : "Noch nicht zugeteilt"));
+    if (w) what.appendChild(el("span", "who", "mit " + w.speaker));
+    li.appendChild(el("span", "room", w ? w.room : "Raum folgt"));
+    return li;
+  }
+  if (who.kind === "speaker" && blockOf(who.talk) === s.block) {
+    const w = WORKSHOPS[who.talk];
+    li.classList.add("mine");
+    what.appendChild(el("span", "tag", "Dein Vortrag · " + s.tag));
+    what.appendChild(el("h3", null, w.title));
+    li.appendChild(el("span", "room", w.room));
+    return li;
+  }
+  // Free speaker or team: every talk running in this slot.
+  li.classList.add("multi");
+  what.appendChild(el("span", "tag", s.tag + " · alle Vorträge"));
+  const list = el("ul", "talks");
+  for (const t of BLOCK_TALKS[s.block]) {
+    const w = WORKSHOPS[t];
+    const item = el("li");
+    item.appendChild(el("b", null, w.title));
+    item.appendChild(el("span", "room", w.room));
+    item.appendChild(el("span", "who", w.speaker));
+    list.appendChild(item);
+  }
+  what.appendChild(list);
+  return li;
+}
+
+function render(heading, accent, roleText, who) {
+  const title = $("title");
+  title.replaceChildren(document.createTextNode(heading + " "), el("span", null, accent));
+  $("role").textContent = roleText || "";
+  $("role").hidden = !roleText;
+  const list = $("plan");
+  list.replaceChildren(...SLOTS.map((s) => slotItem(s, who)));
+  show("result");
+  updateNow(true);
+}
+
+function renderPerson(p) {
+  if (p.kind === "team") {
+    render("Team-Ansicht:", p.name, "Du siehst in jedem Slot alle laufenden Vorträge.", p);
+  } else {
+    const w = WORKSHOPS[p.talk];
+    const b = blockName[blockOf(p.talk)];
+    const own = p.keynote ? "Keynote in der Aula und " + b + " in " + w.room : b + " in " + w.room;
+    render("Plan für", p.name, "Dein Vortrag: " + own + ". In den anderen Blöcken siehst du alle Vorträge, die gerade laufen.", p);
+  }
+}
+
+// --- Highlighting the slot that is running right now ---
+const params = new URLSearchParams(location.search);
+const simulated = params.get("zeit"); // e.g. ?zeit=10:15 to try the highlight before the day
+function nowMinutes() {
+  if (simulated && /^\d{1,2}:\d{2}$/.test(simulated)) return minutes(simulated);
+  const d = new Date();
+  const today = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  return today === EVENT_DATE ? d.getHours() * 60 + d.getMinutes() : null;
+}
+function updateNow(scroll) {
+  const now = nowMinutes();
+  let current = null;
+  for (const li of $("plan").children) {
+    const s = +li.dataset.s, e = +li.dataset.e;
+    const isNow = now != null && now >= s && now < e;
+    li.classList.toggle("now", isNow);
+    li.classList.toggle("past", now != null && now >= e);
+    if (isNow) current = li;
+  }
+  const note = $("daynote");
+  const first = minutes(SLOTS[0].s), last = minutes(SLOTS[SLOTS.length - 1].e);
+  if (now != null && now < first) { note.textContent = "Der Tag beginnt um 8:15 Uhr mit der Keynote in der Aula."; note.hidden = false; }
+  else if (now != null && now >= last) { note.textContent = "Alle Vorträge sind vorbei. Danke fürs Mitmachen!"; note.hidden = false; }
+  else note.hidden = true;
+  if (scroll && current) {
+    // Jump (no smooth scroll) so it also works while fonts are still loading.
+    setTimeout(() => current.scrollIntoView({ behavior: "auto", block: "center" }), 300);
+  }
+}
+setInterval(() => { if (!$("result").hidden) updateNow(false); }, 30000);
+
+// --- Login ---
+function showChooser(key, people) {
+  const box = $("choices");
+  box.replaceChildren(...people.map((p, i) => {
+    const b = el("button", null, p.name);
+    b.type = "button";
+    b.appendChild(el("span", null, p.kind === "team" ? "Team Netzwerk Leopoldinum" : "Vortrag: " + WORKSHOPS[p.talk].title));
+    b.addEventListener("click", () => { remember("name:" + key + ":" + i); renderPerson(p); });
+    return b;
+  }));
+  show("choose");
+}
+
+async function lookup(raw, save) {
   const err = $("err");
   err.hidden = true;
-  if (!code) { err.textContent = "Bitte gib deinen Code ein."; err.hidden = false; return false; }
+  const key = raw.trim().toLowerCase();
+  if (!key) { err.textContent = "Bitte gib deinen Code oder Vornamen ein."; err.hidden = false; return false; }
+  if (NAMES[key]) {
+    const people = NAMES[key];
+    if (people.length === 1) { if (save) remember("name:" + key + ":0"); renderPerson(people[0]); }
+    else showChooser(key, people);
+    return true;
+  }
+  const code = normalize(raw);
   let hash;
   try { hash = await sha256(code); }
   catch { err.textContent = "Dein Browser kann den Code gerade nicht prüfen. Versuche es bitte in einem anderen Browser."; err.hidden = false; return false; }
   const plan = PLANS[hash];
   if (!plan) {
-    err.textContent = "Diesen Code gibt es nicht. Prüfe die Schreibweise, z. B. 0 (Null) und O.";
+    err.textContent = "Diesen Code oder Namen kennen wir nicht. Prüfe bitte die Schreibweise.";
     err.hidden = false;
     return false;
   }
-  render(code, plan);
-  if (remember) { try { localStorage.setItem("bot26-code", code); } catch {} }
+  if (save) remember(code);
+  render("Plan für", pretty(code), "", { kind: "student", plan });
   return true;
 }
 
 $("lookup").addEventListener("submit", (e) => { e.preventDefault(); lookup($("code").value, true); });
-$("reset").addEventListener("click", () => {
-  try { localStorage.removeItem("bot26-code"); } catch {}
-  $("result").hidden = true;
-  $("lookup").hidden = false;
+function logout() {
+  forget();
+  show("lookup");
   $("code").value = "";
   $("code").focus();
-});
+}
+$("reset").addEventListener("click", logout);
+$("choose-back").addEventListener("click", logout);
 
-// Open on the last code this phone used, or on an example plan in the preview.
+// Open on the login this phone used last.
 (async () => {
   let saved = null;
-  try { saved = localStorage.getItem("bot26-code"); } catch {}
-  if (saved && await lookup(saved, false)) return;
-  if (DEMO) { $("code").value = "DEMO-1234"; await lookup("DEMO-1234", false); }
+  try { saved = localStorage.getItem(STORE) || localStorage.getItem("bot26-code"); } catch {}
+  if (!saved) return;
+  const m = /^name:([a-zäöüß]+):(\d+)$/.exec(saved);
+  if (m && NAMES[m[1]] && NAMES[m[1]][+m[2]]) { renderPerson(NAMES[m[1]][+m[2]]); return; }
+  if (!m && await lookup(saved, true)) return;
+  forget();
+  $("err").hidden = true;
 })();
 </script>
 
-</body></html>
+</body>
+</html>
